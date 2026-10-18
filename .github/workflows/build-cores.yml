@@ -28,8 +28,7 @@ jobs:
       run: |
         source /root/.bashrc
         export WORKSPACE_DIR="$GITHUB_WORKSPACE"
-        # Run build_cores script adapting workspace path
-        sed -i 's|/root/workspace|'"$GITHUB_WORKSPACE"'|g' .github/scripts/build_cores.sh
+        chmod +x .github/scripts/build_cores.sh
         .github/scripts/build_cores.sh
 
     - name: Upload Core Binaries
