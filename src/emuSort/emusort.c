@@ -141,7 +141,7 @@ AppState *init()
     log_setName("emuSort");
     print_debug("Debug logging enabled");
     getDeviceModel();
-    SDL_InitDefault(true);
+    SDL_InitDefault();
 
     settings_load();
     theme_load();
