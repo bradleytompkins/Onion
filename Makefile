@@ -128,7 +128,7 @@ build: core apps external
 # Core component list (alphabetical)
 CORE_COMPONENTS := axp batmon bootScreen chargingState cpuclock detectKey easter \
 	gameNameList gameSwitcher infoPanel keymon libgamename mainUiBatPerc \
-	packageManager pippi playActivity pngScale pressMenu2Kill prompt read_uuid \
+	packageManager pbpinfo pippi playActivity pngScale pressMenu2Kill prompt read_uuid \
 	renameRom sendkeys sendUDP setState themeSwitcher tree tweaks
 
 # Binaries to copy to installer (alphabetical)
