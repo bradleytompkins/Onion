@@ -1,0 +1,57 @@
+name: Build Updated Cores
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-cores:
+    name: Build Libretro Cores
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    container:
+      image: aemiii91/miyoomini-toolchain:latest
+      options: --user root
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Git safe directory
+      run: |
+        git config --global --add safe.directory "*"
+
+    - name: Compile Cores
+      shell: bash
+      run: |
+        source /root/.bashrc
+        export WORKSPACE_DIR="$GITHUB_WORKSPACE"
+        # Run build_cores script adapting workspace path
+        sed -i 's|/root/workspace|'"$GITHUB_WORKSPACE"'|g' .github/scripts/build_cores.sh
+        .github/scripts/build_cores.sh
+
+    - name: Upload Core Binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: updated-miyoomini-cores
+        path: |
+          static/build/RetroArch/.retroarch/cores/fake08_libretro.so
+          static/build/RetroArch/.retroarch/cores/pcsx_rearmed_libretro.so
+          static/build/RetroArch/.retroarch/cores/gambatte_libretro.so
+          static/build/RetroArch/.retroarch/cores/picodrive_libretro.so
+          static/build/RetroArch/.retroarch/cores/fceumm_libretro.so
+          static/build/RetroArch/.retroarch/cores/snes9x2005_plus_libretro.so
+
+    - name: Commit and Push Updated Cores
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add static/build/RetroArch/.retroarch/cores/
+        if ! git diff --staged --quiet; then
+          git commit -m "chore(cores): update PCSX ReARMed, Fake-08, Gambatte, Picodrive, FCEUmm, Snes9x [skip ci]"
+          git push origin main
+        else
+          echo "No changes to commit."
+        fi
