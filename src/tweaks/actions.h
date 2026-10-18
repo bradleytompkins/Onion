@@ -332,6 +332,16 @@ void action_hideLabelsHints(void *pt)
     footer_changed = true;
 }
 
+void action_toggleHideBoxArt(void *pt)
+{
+    settings.hide_box_art = ((ListItem *)pt)->value == 1;
+    if (settings.hide_box_art) {
+        system("/mnt/SDCARD/.tmp_update/script/toggle_box_art.sh hide &");
+    } else {
+        system("/mnt/SDCARD/.tmp_update/script/toggle_box_art.sh show &");
+    }
+}
+
 void action_setShowRecents(void *pt)
 {
     settings.show_recents = ((ListItem *)pt)->value == 1;

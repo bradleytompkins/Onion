@@ -472,6 +472,13 @@ void menu_themeOverrides(void *_)
                                      .value = value_hideLabelsHints(),
                                      .action = action_hideLabelsHints},
                                  "Hide the labels at the bottom of the screen.");
+        list_addItemWithInfoNote(&_menu_theme_overrides,
+                                 (ListItem){
+                                     .label = "Hide box art",
+                                     .item_type = TOGGLE,
+                                     .value = settings.hide_box_art,
+                                     .action = action_toggleHideBoxArt},
+                                 "Hide box art previews in the game list.");
         // list_addItem(&_menu_theme_overrides, (ListItem){
         // 	.label = "[Title] Font size", .item_type = MULTIVALUE,
         // .value_max = num_font_sizes, .value_formatter = formatter_fontSize

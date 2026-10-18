@@ -68,6 +68,7 @@ typedef struct settings_s {
     char blue_light_time_off[16];
     bool rtc_available;
 
+    bool hide_box_art;
     char mainui_button_x[JSON_STRING_LEN];
     char mainui_button_y[JSON_STRING_LEN];
 } settings_s;
@@ -96,6 +97,7 @@ static settings_s __default_settings = (settings_s){
     .bgm_mute = false,
     .show_recents = false,
     .show_expert = false,
+    .hide_box_art = false,
     .startup_auto_resume = true,
     .menu_button_haptics = false,
     .low_battery_autosave_at = 4,
@@ -131,6 +133,7 @@ static settings_s __default_settings = (settings_s){
 void _settings_clone(settings_s *dst, settings_s *src)
 {
     *dst = *src;
+    dst->hide_box_art = src->hide_box_art;
     strcpy(dst->keymap, src->keymap);
     strcpy(dst->language, src->language);
     strcpy(dst->theme, src->theme);
@@ -202,6 +205,7 @@ void settings_load(void)
     settings.bgm_mute = config_flag_get(".bgmMute");
     settings.show_recents = config_flag_get(".showRecents");
     settings.show_expert = config_flag_get(".showExpert");
+    settings.hide_box_art = config_flag_get(".hideBoxArt");
     settings.mute = config_flag_get(".muteVolume");
     settings.disable_standby = config_flag_get(".disableStandby");
     settings.enable_logging = config_flag_get(".logging");
@@ -344,6 +348,7 @@ void settings_save(void)
     config_flag_set(".bgmMute", settings.bgm_mute);
     config_flag_set(".showRecents", settings.show_recents);
     config_flag_set(".showExpert", settings.show_expert);
+    config_flag_set(".hideBoxArt", settings.hide_box_art);
     config_flag_set(".muteVolume", settings.mute);
     config_flag_set(".disableStandby", settings.disable_standby);
     config_flag_set(".logging", settings.enable_logging);

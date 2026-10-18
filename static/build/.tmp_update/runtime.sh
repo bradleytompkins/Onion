@@ -76,6 +76,9 @@ main() {
         /mnt/SDCARD/.tmp_update/script/blue_light.sh enable &
     fi
 
+    # Sync box art visibility state
+    $sysdir/script/toggle_box_art.sh sync &
+
     cd $sysdir
     bootScreen "Boot"
 
