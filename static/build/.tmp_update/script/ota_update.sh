@@ -11,12 +11,15 @@ BLUE='\033[1;34m'
 NC='\033[0m' # No Color
 
 # Repository name :
-GITHUB_REPOSITORY=OnionUI/Onion
+GITHUB_REPOSITORY=$(cat "$sysdir/config/ota_repository" 2> /dev/null)
+if [ -z "$GITHUB_REPOSITORY" ]; then
+	GITHUB_REPOSITORY="bradleytompkins/Onion"
+fi
 
 # channel : stable or beta
 channel=$(cat "$sysdir/config/ota_channel" 2> /dev/null)
-if [ "$channel" == "" ]; then
-	channel="stable"
+if [ "$channel" = "" ]; then
+	channel="beta"
 fi
 
 main() {
@@ -99,11 +102,11 @@ check_connection() {
 }
 
 run_bootstrap() {
-	curl -k -s https://raw.githubusercontent.com/OnionUI/Onion/main/static/build/.tmp_update/script/ota_bootstrap.sh | sh
+	curl -k -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/static/build/.tmp_update/script/ota_bootstrap.sh" | sh
 }
 
 channel_choice() {
-	channel=$(echo -e "stable\nbeta" | $sysdir/script/shellect.sh -t "Select distribution channel:" -b "Press A to validate your choice.")
+	channel=$(echo -e "beta\nstable" | $sysdir/script/shellect.sh -t "Select distribution channel:" -b "Press A to validate your choice.")
 	clear
 	echo "$channel" > "$sysdir/config/ota_channel"
 }
@@ -112,10 +115,13 @@ get_release_info() {
 	echo -n "Retrieving release information... "
 
 	# Github source api url
-	if [ "$channel" = "beta" ]; then
-		Release_assets_info=$(curl -k -s https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/latest)
+	if [ "$channel" = "beta" ] || [ -z "$channel" ]; then
+		Release_assets_info=$(curl -k -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/latest")
 	else
-		Release_assets_info=$(curl -k -s https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest)
+		Release_assets_info=$(curl -k -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+		if echo "$Release_assets_info" | grep -q '"message": "Not Found"'; then
+			Release_assets_info=$(curl -k -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/latest")
+		fi
 	fi
 
 	if echo "$Release_assets_info" | grep -q '"message": "Not Found"'; then
