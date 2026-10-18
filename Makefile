@@ -164,6 +164,7 @@ apps: $(CACHE)/.setup
 	@cd $(SRC_DIR)/playActivityUI && BUILD_DIR="$(PACKAGES_APP_DEST)/Activity Tracker/App/PlayActivity" $(MAKE)
 	@find $(SRC_DIR)/playActivityUI -depth -type d -name res -exec cp -r {}/. "$(PACKAGES_APP_DEST)/Activity Tracker/App/PlayActivity/res/" \;
 	@find $(SRC_DIR)/packageManager -depth -type d -name res -exec cp -r {}/. $(BUILD_DIR)/App/PackageManager/res/ \;
+	@cd $(SRC_DIR)/emuSort && BUILD_DIR="$(PACKAGES_APP_DEST)/MainUI Emulator Sorter/App/EmuSort" $(MAKE)
 # Simple apps just build to BIN_DIR
 	@for app in $(SIMPLE_APPS); do \
 		cd $(SRC_DIR)/$$app && BUILD_DIR="$(BIN_DIR)" $(MAKE) || exit 1; \
